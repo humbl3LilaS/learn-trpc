@@ -46,7 +46,7 @@ const appRouter = t.router(
                 }),
                 markComplete: t.procedure
                                .input(z.object({id: z.number()}))
-                               .query(async (opts) => {
+                               .mutation(async (opts) => {
                                    const id = opts.input.id;
                                    const [updatedTodo] = await db
                                        .update(todos)
@@ -68,7 +68,28 @@ const appRouter = t.router(
                                    }
 
                                    return updatedTodo;
-                               })
+                               }),
+                deleteById: t.procedure
+                             .input(z.object({id: z.number()}))
+                             .mutation(async (opts) => {
+                                 const id = opts.input.id;
+                                 const [deletedTodo] = await db
+                                     .delete(todos)
+                                     .where(eq(todos.id, id))
+                                     .returning(
+                                         {
+                                             id: todos.id,
+                                             title: todos.title,
+                                             isCompleted: todos.isCompleted,
+                                             createdAt: todos.createdAt,
+                                             completedAt: todos.completedAt,
+                                         })
+
+                                 if (!deletedTodo) {
+                                     return undefined;
+                                 }
+                                 return deletedTodo;
+                             })
             }
         )
     }

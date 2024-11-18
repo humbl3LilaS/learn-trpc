@@ -8,7 +8,7 @@ export const todos = pgTable(
         isCompleted: boolean("is_completed").$default(() => false),
         createdAt: date("created_at").$default(() => (
             new Date()
-        ).toString()),
+        ).toDateString()),
         completedAt: date("completed_at")
     }
 )
