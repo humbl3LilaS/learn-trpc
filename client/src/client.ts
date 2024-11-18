@@ -1,4 +1,4 @@
-import type {AppRouter} from "../../server/main.ts";
+import type {AppRouter} from "../../server/main";
 import {createTRPCProxyClient, httpBatchLink} from "@trpc/client";
 
 
