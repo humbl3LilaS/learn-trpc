@@ -4,6 +4,8 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 import cors from "cors";
 import {todos} from "./database/schema.ts";
 import {db} from "./database/drizzle.ts";
+import {z} from "zod";
+import {eq} from "drizzle-orm";
 
 const app = express();
 const port = 3000;
@@ -41,7 +43,32 @@ const appRouter = t.router(
                         return undefined;
                     }
                     return result;
-                })
+                }),
+                markComplete: t.procedure
+                               .input(z.object({id: z.number()}))
+                               .query(async (opts) => {
+                                   const id = opts.input.id;
+                                   const [updatedTodo] = await db
+                                       .update(todos)
+                                       .set({isCompleted: true})
+                                       .where(
+                                           eq(todos.id, id)
+                                       )
+                                       .returning(
+                                           {
+                                               id: todos.id,
+                                               title: todos.title,
+                                               isCompleted: todos.isCompleted,
+                                               createdAt: todos.createdAt,
+                                               completedAt: todos.completedAt,
+                                           })
+
+                                   if (!updatedTodo) {
+                                       return undefined;
+                                   }
+
+                                   return updatedTodo;
+                               })
             }
         )
     }
