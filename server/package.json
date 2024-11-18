@@ -3,12 +3,17 @@
   "module": "main.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun --watch main.ts"
+    "dev": "bun --watch main.ts",
+    "db:generate": "bunx drizzle-kit generate",
+    "db:migrate": "bunx drizzle-kit migrate",
+    "db:studio": "bunx drizzle-kit studio"
   },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0"
+    "@types/express": "^5.0.0",
+    "@types/pg": "^8.11.10",
+    "drizzle-kit": "^0.28.1"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -16,7 +21,9 @@
   "dependencies": {
     "@trpc/server": "^10.45.2",
     "cors": "^2.8.5",
+    "drizzle-orm": "^0.36.3",
     "express": "^4.21.1",
+    "pg": "^8.13.1",
     "zod": "^3.23.8"
   }
 }
